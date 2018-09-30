@@ -1,10 +1,11 @@
-const http = require('http');
+const request = require('request');
 const monzoOAuth = require('./credentials/monzo-oauth');
 
 let accessToken;
 
 let connectMonzo = function (req, res) {
-    console.log("connect monzo function ran");
+    console.log("connectint with ");
+    console.log(monzoOAuth);
     res.type('html');
     res.send(`
         <h1>Hello</h1>
@@ -17,6 +18,43 @@ let connectMonzo = function (req, res) {
     `);
 };
 
+let receiveAuthCode = function (req, res) {
+    console.log("received auth code, attempting to get access token...");
+    let authCode = req.query.code;
+    
+
+    request.post({
+        url: monzoOAuth.tokenURL,
+        form: {
+            grant_type: 'authorization_code',
+            client_id: monzoOAuth.clientID,
+            client_secret: monzoOAuth.clientSecret,
+            redirect_uri: monzoOAuth.redirectURI,
+            code: authCode
+        }
+    }, function(err, response, body){
+        let accessToken = JSON.parse(body);
+
+        if (accessToken.error) {
+            console.error('error getting access token: '+accessToken.error);
+            return;
+        }
+        receiveAccessToken(res, accessToken);
+    });
+
+};
+
+let receiveAccessToken = function (res, token) {
+    console.log("received access token");
+
+    // Get access token from the POST response body
+    console.log(token);
+    res.redirect('/monzo/account');
+};
+
+
+
 module.exports = {
-    connectMonzo: connectMonzo
+    connectMonzo: connectMonzo,
+    getAccessToken: receiveAuthCode
 };

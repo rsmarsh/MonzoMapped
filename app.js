@@ -15,5 +15,15 @@ app.get('/', logVisitor,  express.static(__dirname + '/public'))
 
 app.get('/monzo', authoriser.connectMonzo);
 
+app.get('/oauth/redirect', authoriser.getAccessToken);
+
+app.get('/monzo/account', function(req, res){
+    res.type('html');
+    res.send(`
+        <h1>Log In Success</h1>
+    `);
+});
 
 app.listen(port);
+
+console.log("server listening on localhost:"+port);
