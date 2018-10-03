@@ -1,4 +1,5 @@
 const authoriser = require('./private/authoriser');
+const db = require('./private/database');
 const express = require('express');
 const app = express();
 const port = 3001;
@@ -22,6 +23,18 @@ app.get('/monzo/account', function(req, res){
     res.send(`
         <h1>Log In Success</h1>
     `);
+});
+
+// test route to run commands on the database and write the response to the page
+app.get('/db', function(req, res){
+    var callback = function(dbData){
+        res.type('html');
+        res.send(`
+        <h1>DB Response:</h1>
+        <p>`+dbData+`</p>
+        `);
+    };
+    db.runStatement('SELECT * from Users', callback);
 });
 
 app.listen(port);
