@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const dbAuth = require('./credentials/database');
 
-let connectToDB = function(){
+let connectToDB = function () {
     let connection = mysql.createConnection({
         host: dbAuth.hostname,
         user: dbAuth.username,
@@ -13,24 +13,39 @@ let connectToDB = function(){
     return connection;
 };
 
-let closeDBConnection = function(connection){
+// Once the query is complete, close the database connection to free up the available connections
+let closeDBConnection = function (connection) {
     connection.end();
-    console.log("Database Connection Ended");
-}
+    console.log("Database Connection Closed");
+};
 
-let runStatement = function(statement, callback) {
+// Receive a login attempt from the user
+let loginAttempt = function (username, password) {
+    console.log("received loginAttempt");
+    let statement = "SELECT hash, salt FROM Users WHERE username = ";
+    selectStatement(statement, username, verifyLogin);
+};
+
+// Receive results from the database to see if they match the user attempting to log-in
+verifyLogin = function (error, results, fields) {
+    console.log("received verify login attempt");
+};
+
+// Takes a statement containing '?' escape characters, which are switched out by an array of inserts
+// Finally, the callback will be triggered upon completion of the query
+let selectStatement = function (statement, inserts, callback) {
     let db = connectToDB();
-    db.query('SELECT * FROM '+dbAuth.databaseName+'.Users', function (error, results, fields) {
+
+    db.query(statement, inserts, function (error, results, fields) {
         if (error) throw error;
-        console.log('DB response is:')
+        console.log('DB response is:');
         console.log(results);
         callback(fields);
     });
+
     closeDBConnection(db);
 }
 
-
-
 module.exports = {
-    runStatement: runStatement
+    select: selectStatement
 };

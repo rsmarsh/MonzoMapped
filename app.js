@@ -34,7 +34,7 @@ app.get('/db', function(req, res){
         <p>`+dbData+`</p>
         `);
     };
-    db.runStatement('SELECT * from Users', callback);
+    db.select('SELECT ? from MonzoMappedDB.?', ['*', 'Users'], callback);
 });
 
 app.listen(port);
