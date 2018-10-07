@@ -25,6 +25,14 @@ app.get('/monzo/account', function(req, res){
     `);
 });
 
+app.get('/testing', function(req, res){
+    db.testing();
+    res.type('html');
+    res.send(`
+        <h1>Test Ran</h1>
+    `);
+});
+
 // test route to run commands on the database and write the response to the page
 app.get('/db', function(req, res){
     var callback = function(dbData){

@@ -1,6 +1,8 @@
+const encryptor = require('./encryptor');
 const mysql = require('mysql');
 const dbAuth = require('./credentials/database');
 
+// Internal function, opens up a connection to the database
 let connectToDB = function () {
     let connection = mysql.createConnection({
         host: dbAuth.hostname,
@@ -43,9 +45,16 @@ let selectStatement = function (statement, inserts, callback) {
         callback(fields);
     });
 
+    // Does this need to be within the callback function?
     closeDBConnection(db);
 }
 
+// Debug function for testing functionality
+let testing = function(){
+    encryptor.encryptPassword('test', console.log);
+}
+
 module.exports = {
-    select: selectStatement
+    select: selectStatement,
+    testing: testing
 };
