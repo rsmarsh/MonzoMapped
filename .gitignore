@@ -1,1 +1,4 @@
 node_modules
+/private/credentials/database.json
+/private/credentials/mapbox.json
+/private/credentials/monzo-oauth.json
