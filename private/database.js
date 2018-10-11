@@ -25,12 +25,30 @@ let closeDBConnection = function (connection) {
 let loginAttempt = function (username, password) {
     console.log("received loginAttempt");
     let statement = "SELECT hash, salt FROM Users WHERE username = ";
-    selectStatement(statement, username, verifyLogin);
+    selectStatement(statement, username, verifyLogin.bind(this, username, password)); // This bind may be incorrect
 };
 
 // Receive results from the database to see if they match the user attempting to log-in
-verifyLogin = function (error, results, fields) {
+let verifyLogin = function (username, password, error, results, fields) {
     console.log("received verify login attempt");
+    if (error) {
+        throw error;
+    }
+
+    let loginResult = function(successful){
+        if (successful) {
+            console.log("login successful");
+        } else {
+            console.log("login failure");
+        }
+    }
+
+    let hash = fields.hash; //pseudo code, check for correct method of accessing
+    let salt = fields.salt; //check for correct field names
+
+
+    
+    encryptor.checkPasswordsMatch(username, hash, salt, loginResult);
 };
 
 // Takes a statement containing '?' escape characters, which are switched out by an array of inserts
@@ -45,7 +63,7 @@ let selectStatement = function (statement, inserts, callback) {
         callback(fields);
     });
 
-    // Does this need to be within the callback function?
+    // Does this need to be within the callback function? What if the query hasn't finished yet?
     closeDBConnection(db);
 }
 
@@ -56,5 +74,6 @@ let testing = function(){
 
 module.exports = {
     select: selectStatement,
+    loginAttempt: loginAttempt,
     testing: testing
 };

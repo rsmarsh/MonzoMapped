@@ -21,8 +21,15 @@ app.get('/oauth/redirect', authoriser.getAccessToken);
 app.get('/monzo/account', function(req, res){
     res.type('html');
     res.send(`
-        <h1>Log In Success</h1>
+        <h1>Log In Attempt</h1>
     `);
+});
+
+app.post('/login', function(req, res){
+    var username = req.param('email', null);
+    var password = req.param('password', null);
+    console.log("attempting login for user", username);
+    db.loginAttempt(username, password);
 });
 
 app.get('/testing', function(req, res){
