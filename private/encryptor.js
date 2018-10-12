@@ -16,7 +16,7 @@ let encryptPassword = function(plainTextPassword, callback) {
 let checkPasswordsMatch = function(plainTextPassword, hash, callback) {
     
     // Check provided password and stored hash are a match
-    bcrpyt.compare(plainTextPassword, hash, function(err, passwordsMatch){
+    bcrypt.compare(plainTextPassword, hash, function(err, passwordsMatch){
         if (err) {
             throw err;
         }

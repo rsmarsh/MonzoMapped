@@ -1,6 +1,7 @@
 const authoriser = require('./private/authoriser');
 const db = require('./private/database');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
@@ -25,12 +26,32 @@ app.get('/monzo/account', function(req, res){
     `);
 });
 
-app.post('/login', function(req, res){
-    var username = req.param('email', null);
-    var password = req.param('password', null);
-    console.log("attempting login for user", username);
-    db.loginAttempt(username, password);
+// Send the login form to the client
+app.get('/login', function(req, res){
+    res.type('html');
+    res.send(`
+        <h1>Hello</h1>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Username" />
+            <input type="password" name="password" />
+            <button>Sign in</button>
+        </form>
+    `);
+
 });
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+// Receive a login request from the client
+app.post('/login', urlencodedParser, function(req, res){
+    
+    console.log("received post request for user", username);
+    var username = req.body.username;
+    var password = req.body.password;
+    db.loginAttempt(username, password);
+    
+})
 
 app.get('/testing', function(req, res){
     db.testing();
