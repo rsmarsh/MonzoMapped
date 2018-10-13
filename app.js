@@ -33,11 +33,25 @@ app.get('/monzo/account', function(req, res){
 app.get('/login',  function(req, res){
     res.type('html');
     res.send(`
-    <h1>Hello</h1>
+    <h1>Hello, enter your details below to login</h1>
     <form action="/login" method="post">
     <input type="text" name="email" placeholder="email" />
     <input type="password" name="password" />
     <button>Sign in</button>
+    </form>
+    `);
+    
+});
+
+// Send the login form to the client
+app.get('/register',  function(req, res){
+    res.type('html');
+    res.send(`
+    <h1>Hello, Enter your details below to register an account</h1>
+    <form action="/register" method="post">
+    Email: <input type="text" name="email" placeholder="email" />
+    Password: <input type="password" name="password" />
+    <button>Register</button>
     </form>
     `);
     
@@ -48,12 +62,11 @@ app.get('/login',  function(req, res){
 // create parser to strip out submitted fields from 'application/x-www-form-urlencoded' web forms
 let urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-// Receive a login request from the client
-app.post('/login', urlencodedParser, routes.user.login, function(req, res, successful){
-    console.log("this is the function at the end of the post login route, does this ever run???");
-    console.log("and does it receive the success arg?", successful);
-});
+// Receive a login or registration request from the client
+app.post('/login', urlencodedParser, routes.user.login);
+app.post('/register', urlencodedParser, routes.user.register);
 
+// used for testing, to be removed before a final version is made
 app.get('/testing', function(req, res){
     db.testing();
     res.type('html');
@@ -71,7 +84,7 @@ app.get('/db', function(req, res){
         <p>`+dbData+`</p>
         `);
     };
-    db.select('SELECT ? from MonzoMappedDB.?', ['*', 'Users'], callback);
+    db.query('SELECT ? from MonzoMappedDB.?', ['*', 'Users'], callback);
 });
 
 app.listen(port);

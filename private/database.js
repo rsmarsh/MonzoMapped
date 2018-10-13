@@ -23,24 +23,14 @@ let closeDBConnection = function (connection) {
 
 // Takes a statement containing '?' escape characters, which are switched out by an array of inserts
 // Finally, the callback will be triggered upon completion of the query
-let select = function (statement, inserts, callback) {
+let query = function (statement, inserts, callback) {
     let db = connectToDB();
 
-    db.query(statement, inserts, function (error, results, fields) {
-        let hash, salt;
-        if (error) throw error;
-        if (results.length === 0) {
-            console.log("no existing user found for this email");
-        } else {
-            hash = results[0].password_hash;
-            salt = results[0].password_salt;
-        }
-
-        if (results.length > 1) {
-            console.warn('WARNING: more than two results returned for one email address, using the first one')
-        }
-
-        callback(hash, salt);
+    db.query(statement, inserts, function (err, results) {
+        console.log("db query callback");
+        if (err) throw err;
+        // pass the results back to the callee
+        callback(results);
     });
 
     // Does this need to be within the callback function? What if the query hasn't finished yet?
@@ -53,6 +43,6 @@ let testing = function(){
 }
 
 module.exports = {
-    select: select,
+    query: query,
     testing: testing
 };
