@@ -18,7 +18,8 @@ let checkPasswordsMatch = function(plainTextPassword, hash, callback) {
     // Check provided password and stored hash are a match
     bcrypt.compare(plainTextPassword, hash, function(err, passwordsMatch){
         if (err) {
-            throw err;
+            console.warn(err);
+            passwordsMatch = false;
         }
 
         // compare returns a boolean of whether the passwords match

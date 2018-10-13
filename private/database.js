@@ -54,6 +54,5 @@ let testing = function(){
 
 module.exports = {
     select: select,
-    loginAttempt: loginAttempt,
     testing: testing
 };

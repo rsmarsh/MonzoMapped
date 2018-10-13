@@ -30,23 +30,26 @@ app.get('/monzo/account', function(req, res){
 });
 
 // Send the login form to the client
-app.get('/login', function(req, res){
+app.get('/login',  function(req, res){
     res.type('html');
     res.send(`
-        <h1>Hello</h1>
-        <form action="/login" method="post">
-            <input type="text" name="email" placeholder="email" />
-            <input type="password" name="password" />
-            <button>Sign in</button>
-        </form>
+    <h1>Hello</h1>
+    <form action="/login" method="post">
+    <input type="text" name="email" placeholder="email" />
+    <input type="password" name="password" />
+    <button>Sign in</button>
+    </form>
     `);
-
+    
 });
 
 
 
+// create parser to strip out submitted fields from 'application/x-www-form-urlencoded' web forms
+let urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 // Receive a login request from the client
-app.post('/login', routes.user.login, function(req, res, successful){
+app.post('/login', urlencodedParser, routes.user.login, function(req, res, successful){
     console.log("this is the function at the end of the post login route, does this ever run???");
     console.log("and does it receive the success arg?", successful);
 });
