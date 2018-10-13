@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `MonzoMappedDB`.`Users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
   `password_hash` CHAR(60) NOT NULL,
-  `password_salt` VARCHAR(45) NOT NULL,
   `created_date` DATETIME NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `userID_UNIQUE` (`user_id` ASC),
