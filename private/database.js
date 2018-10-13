@@ -21,36 +21,9 @@ let closeDBConnection = function (connection) {
     console.log("Database Connection Closed");
 };
 
-// Receive a login attempt from the user
-let loginAttempt = function (email, password) {
-    let statement = "SELECT password_hash, password_salt FROM Users WHERE email = ?";
-    selectStatement(statement, email, verifyLogin.bind(this, email, password));
-};
-
-// Receive results from the database to see if they match the user attempting to log-in
-let verifyLogin = function (email, password, hash, salt) {
-    console.log("received verify login attempt for", email);
-    
-    // If the database returned no result for this user, no need to check the password
-    if (!hash || !salt) {
-        loginResult(false);
-        return;
-    }
-    encryptor.checkPasswordsMatch(password, hash, salt, loginResult);
-};
-
-// The password check will pass the result to this function once checking has completed
-let loginResult = function(successful){
-    if (successful) {
-        console.log("login successful");
-    } else {
-        console.log("login failure");
-    }
-}
-
 // Takes a statement containing '?' escape characters, which are switched out by an array of inserts
 // Finally, the callback will be triggered upon completion of the query
-let selectStatement = function (statement, inserts, callback) {
+let select = function (statement, inserts, callback) {
     let db = connectToDB();
 
     db.query(statement, inserts, function (error, results, fields) {
@@ -80,7 +53,7 @@ let testing = function(){
 }
 
 module.exports = {
-    select: selectStatement,
+    select: select,
     loginAttempt: loginAttempt,
     testing: testing
 };

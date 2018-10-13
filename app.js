@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
+const routes = {};
+routes.user = require('./private/routes/user.js');
+
 let visitorCounter = 0;
 
 let logVisitor = function(req,res,next) {
@@ -32,7 +35,7 @@ app.get('/login', function(req, res){
     res.send(`
         <h1>Hello</h1>
         <form action="/login" method="post">
-            <input type="text" name="username" placeholder="Username" />
+            <input type="text" name="email" placeholder="email" />
             <input type="password" name="password" />
             <button>Sign in</button>
         </form>
@@ -40,18 +43,13 @@ app.get('/login', function(req, res){
 
 });
 
-// create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 
 // Receive a login request from the client
-app.post('/login', urlencodedParser, function(req, res){
-    
-    console.log("received post request for user", username);
-    var username = req.body.username;
-    var password = req.body.password;
-    db.loginAttempt(username, password);
-    
-})
+app.post('/login', routes.user.login, function(req, res, successful){
+    console.log("this is the function at the end of the post login route, does this ever run???");
+    console.log("and does it receive the success arg?", successful);
+});
 
 app.get('/testing', function(req, res){
     db.testing();
