@@ -5,7 +5,6 @@
 
 const database = require('../database.js');
 const encryptor = require('../encryptor');
-const bodyParser = require('body-parser');
 
 //////LOGIN HANDLING//////////
 // Receive a login attempt from the user
