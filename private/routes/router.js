@@ -13,6 +13,18 @@ let logVisitor = function(req,res,next) {
 
 //pass in the server instance when requiring this file, so these functions can access the server
 module.exports = function(server) {
+
+    server.use('/', function(req, res, next){
+        if (req.session.views) {
+            req.session.views++;
+            console.log('views for this session:', req.session.views);
+        } else {
+            req.session.views = 1;
+            console.log("new session created");
+        }
+        next();
+    });
+
     // only server static files within the public folder or lower
     server.get('/', logVisitor,  server.inner.static(__dirname + '/public'))
 
