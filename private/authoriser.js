@@ -4,8 +4,6 @@ const monzoOAuth = require('./credentials/monzo-oauth');
 let accessToken;
 
 let connectMonzo = function (req, res) {
-    console.log("connectint with ");
-    console.log(monzoOAuth);
     res.type('html');
     res.send(`
         <h1>Hello</h1>
@@ -33,6 +31,7 @@ let receiveAuthCode = function (req, res) {
             code: authCode
         }
     }, function(err, response, body){
+        // Get access token from the POST response body
         let accessToken = JSON.parse(body);
 
         if (accessToken.error) {
@@ -47,7 +46,6 @@ let receiveAuthCode = function (req, res) {
 let receiveAccessToken = function (res, token) {
     console.log("received access token");
 
-    // Get access token from the POST response body
     console.log(token);
     res.redirect('/monzo/account');
 };

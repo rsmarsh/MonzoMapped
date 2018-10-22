@@ -17,12 +17,17 @@ module.exports = function(server) {
     server.use('/', function(req, res, next){
         if (req.session.views) {
             req.session.views++;
-            console.log('views for this session:', req.session.views);
         } else {
             req.session.views = 1;
             console.log("new session created");
         }
-        next();
+
+        // if a user is not logged in, always forward them to the login page
+        if (req.url!=='/login' && !req.session.authenticated) {
+            res.redirect('/login');
+        } else {
+            next();
+        }
     });
 
     // only server static files within the public folder or lower

@@ -12,6 +12,7 @@ let login = function (req, res) {
     res.locals.email = req.body.email;
     res.locals.password = req.body.password;
 
+
     let statement = "SELECT password_hash FROM Users WHERE email = ?";
     database.query(statement, res.locals.email, function(results){
         // Callback will be invoked along with the results from the database
@@ -25,6 +26,9 @@ let login = function (req, res) {
         // check that the password entered by the user matches the held password
         encryptor.checkPasswordsMatch(res.locals.password, results[0].password_hash, function(passwordsMatch){
             console.log("passwords match:",passwordsMatch);
+            if (passwordsMatch); {
+                req.session.authenticated = true;
+            }
             res.send(passwordsMatch);
         });
 

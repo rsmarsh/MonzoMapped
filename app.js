@@ -12,8 +12,11 @@ server.instance.use(session({
     genid: function(req) {
         return uuid();
     },
-    secret: 'secret keyword',
-    cookie: {}
+    // for now, during development, generate a new session secret each time the app is launched
+    secret: 'verysecretsecret',
+    cookie: {},
+    resave: false,
+    saveUninitialized: true
 }));
 
 // Set up routes on the server
