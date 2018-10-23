@@ -26,24 +26,32 @@ let login = function (req, res) {
         // check that the password entered by the user matches the held password
         encryptor.checkPasswordsMatch(res.locals.password, results[0].password_hash, function(passwordsMatch){
             console.log("passwords match:",passwordsMatch);
-            if (passwordsMatch); {
+            if (passwordsMatch) {
                 req.session.authenticated = true;
+                req.session.email = res.locals.email;
+                res.redirect('/monzo');
+                return;
             }
-            res.send(passwordsMatch);
+            res.send('Invalid user. Please try again');
+            
         });
 
     });
 };
 
+// Log out and deauthenticate a user session
 let logout = function(req, res) {
-    req.session.authenticated = false;
-    console.log("user logged out");
+    if (req.session.authenticated) {
+        req.session.authenticated = false;
+        delete req.session.email;
+        next();
+    } 
+    // if a user somehow ends up here when not logged in, just send them back to home
     res.redirect('/');
 };
 
 
 //////REGISTRATION HANDLING///////
-
 // Register a new user in the database, 
 let register = function(req, res){
     res.locals.email = req.body.email;

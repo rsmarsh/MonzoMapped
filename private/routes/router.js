@@ -36,7 +36,9 @@ module.exports = function(server) {
     // Receive a login or registration request from the client
     server.post('/login', server.bodyParser, user.login);
     server.post('/register', server.bodyParser, user.register);
-    server.get('/logout', user.logout);
+    server.get('/logout', user.logout, function(req, res){
+        res.send('Successfully logged out');
+    });
 
     // used for testing, to be removed before a final version is made
     server.get('/testing', function(req, res){
