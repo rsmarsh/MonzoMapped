@@ -35,6 +35,12 @@ let login = function (req, res) {
     });
 };
 
+let logout = function(req, res) {
+    req.session.authenticated = false;
+    console.log("user logged out");
+    res.redirect('/');
+};
+
 
 //////REGISTRATION HANDLING///////
 
@@ -94,5 +100,6 @@ let registrationResult = function(req, res, resultObject) {
 
 module.exports = {
     login: login,
+    logout: logout,
     register: register
 };
