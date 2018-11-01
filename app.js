@@ -27,4 +27,4 @@ const routes = require('./private/routes/router')(server.instance);
 const authoriser = require('./private/authoriser');
 const db = require('./private/database');
 
-server.start(8080);
+server.start(3001);

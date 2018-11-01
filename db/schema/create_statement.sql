@@ -37,12 +37,14 @@ AUTO_INCREMENT = 1000;
 DROP TABLE IF EXISTS `MonzoMappedDB`.`MonzoLink` ;
 
 CREATE TABLE IF NOT EXISTS `MonzoMappedDB`.`MonzoLink` (
-  `link_id` INT NOT NULL,
+  `link_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
-  `access_token` VARCHAR(45) NULL,
-  `refresh_token` VARCHAR(45) NULL,
+  `access_token` VARCHAR(255) NULL,
+  `refresh_token` VARCHAR(255) NULL,
+  `token_expires` DATETIME NULL,
   PRIMARY KEY (`link_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC),
+  UNIQUE INDEX `link_id_UNIQUE` (`link_id` ASC),
   CONSTRAINT `user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `MonzoMappedDB`.`Users` (`user_id`)

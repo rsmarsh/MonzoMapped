@@ -29,12 +29,14 @@ let query = function (statement, inserts, callback) {
     db.query(statement, inserts, function (err, results) {
         console.log("db query callback");
         if (err) throw err;
+        
+        // Does this need to be within the callback function? What if the query hasn't finished yet?
+        closeDBConnection(db);
+
         // pass the results back to the callee
         callback(results);
     });
 
-    // Does this need to be within the callback function? What if the query hasn't finished yet?
-    closeDBConnection(db);
 }
 
 // Debug function for testing functionality
@@ -44,5 +46,6 @@ let testing = function(){
 
 module.exports = {
     query: query,
-    testing: testing
+    testing: testing,
+    escape: mysql.escape
 };

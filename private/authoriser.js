@@ -1,5 +1,6 @@
 const request = require('request');
 const monzoOAuth = require('./credentials/monzo-oauth');
+const db = require('./database.js');
 
 let accessToken;
 
@@ -35,19 +36,39 @@ let receiveAuthCode = function (req, res) {
         let accessToken = JSON.parse(body);
 
         if (accessToken.error) {
-            console.error('error getting access token: '+accessToken.error);
+            console.error('error getting access token: ')
+            console.error(accessToken);
+            res.send(accessToken.message);
             return;
         }
-        receiveAccessToken(res, accessToken);
+        receiveAccessToken(req, res, accessToken);
     });
 
 };
 
-let receiveAccessToken = function (res, token) {
+let receiveAccessToken = function (req, res, token) {
     console.log("received access token");
-
+    
     console.log(token);
-    res.redirect('/monzo/account');
+    // res.redirect('/monzo/account');
+    console.log("attempting to insert token for account email", req.session.email);
+    
+    // Insert this into the Database so that sessions can be reused without the user having to reauthenticate each time
+    let insertStatement = `
+        INSERT INTO MonzoLink (user_id, access_token, refresh_token)
+        SELECT user_id, `+db.escape(token.access_token)+`, `+db.escape(token.refresh_token)+` FROM Users
+        WHERE email=`+db.escape(req.session.email)+`
+    `;
+    // inserts are access_token, refresh_token  and the current user's email
+    // let inserts = [token.access_token, token.refresh_token, req.session.email];
+    let inserts = [];
+    db.query(insertStatement, inserts, function(results){
+        console.log("inserted new MonzoLink into DB");
+        console.log("results", results);
+        res.send('auth with monzo created successfully');
+    });
+    
+
 };
 
 

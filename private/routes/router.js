@@ -23,7 +23,7 @@ module.exports = function(server) {
         }
 
         // if a user is not logged in, always forward them to the login page
-        if (req.url!=='/login' && !req.session.authenticated) {
+        if ((req.url!=='/login' && req.url!=='/register') && !req.session.authenticated) {
             res.redirect('/login');
         } else {
             next();

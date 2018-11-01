@@ -9,6 +9,7 @@ const encryptor = require('../encryptor');
 //////LOGIN HANDLING//////////
 // Receive a login attempt from the user
 let login = function (req, res) {
+    // Don't store within the session variables until this is verified as correct login info
     res.locals.email = req.body.email;
     res.locals.password = req.body.password;
 
