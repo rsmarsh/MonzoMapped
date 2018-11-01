@@ -11,14 +11,12 @@ let connectToDB = function () {
         database: dbAuth.databaseName
     });
     connection.connect();
-    console.log("Database Connection Opened");
     return connection;
 };
 
 // Once the query is complete, close the database connection to free up the available connections
 let closeDBConnection = function (connection) {
     connection.end();
-    console.log("Database Connection Closed");
 };
 
 // Takes a statement containing '?' escape characters, which are switched out by an array of inserts
@@ -27,7 +25,6 @@ let query = function (statement, inserts, callback) {
     let db = connectToDB();
 
     db.query(statement, inserts, function (err, results) {
-        console.log("db query callback");
         if (err) throw err;
         
         // Does this need to be within the callback function? What if the query hasn't finished yet?

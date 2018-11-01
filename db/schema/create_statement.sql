@@ -39,9 +39,9 @@ DROP TABLE IF EXISTS `MonzoMappedDB`.`MonzoLink` ;
 CREATE TABLE IF NOT EXISTS `MonzoMappedDB`.`MonzoLink` (
   `link_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
-  `access_token` VARCHAR(255) NULL,
-  `refresh_token` VARCHAR(255) NULL,
-  `token_expires` DATETIME NULL,
+  `access_token` VARCHAR(255) NOT NULL,
+  `refresh_token` VARCHAR(255) NOT NULL,
+  `token_expires` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`link_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC),
   UNIQUE INDEX `link_id_UNIQUE` (`link_id` ASC),

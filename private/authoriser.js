@@ -46,25 +46,23 @@ let receiveAuthCode = function (req, res) {
 
 };
 
+// Receive an access token after the user clickes the confirmation link in their email from Monzo
 let receiveAccessToken = function (req, res, token) {
-    console.log("received access token");
-    
-    console.log(token);
-    // res.redirect('/monzo/account');
-    console.log("attempting to insert token for account email", req.session.email);
-    
+
+    // This will find the Unix Timestamp of when this access token expires
+    var tokenExpiryDate = new Date().getTime()+parseInt(token.expires_in);
+
     // Insert this into the Database so that sessions can be reused without the user having to reauthenticate each time
     let insertStatement = `
-        INSERT INTO MonzoLink (user_id, access_token, refresh_token)
-        SELECT user_id, `+db.escape(token.access_token)+`, `+db.escape(token.refresh_token)+` FROM Users
+        INSERT INTO MonzoLink (user_id, access_token, refresh_token, token_expires)
+        SELECT user_id, `+db.escape(token.access_token)+`, `+db.escape(token.refresh_token)+`, `+db.escape(tokenExpiryDate)+` FROM Users
         WHERE email=`+db.escape(req.session.email)+`
     `;
     // inserts are access_token, refresh_token  and the current user's email
     // let inserts = [token.access_token, token.refresh_token, req.session.email];
     let inserts = [];
     db.query(insertStatement, inserts, function(results){
-        console.log("inserted new MonzoLink into DB");
-        console.log("results", results);
+        console.log("successfully created a monzo link for user", req.session.email);
         res.send('auth with monzo created successfully');
     });
     

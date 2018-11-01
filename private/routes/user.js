@@ -26,7 +26,6 @@ let login = function (req, res) {
 
         // check that the password entered by the user matches the held password
         encryptor.checkPasswordsMatch(res.locals.password, results[0].password_hash, function(passwordsMatch){
-            console.log("passwords match:",passwordsMatch);
             if (passwordsMatch) {
                 req.session.authenticated = true;
                 req.session.email = res.locals.email;
@@ -46,6 +45,7 @@ let logout = function(req, res, next) {
         req.session.authenticated = false;
         delete req.session.email;
         next();
+        return;
     } 
     // if a user somehow ends up here when not logged in, just send them back to home
     res.redirect('/');
