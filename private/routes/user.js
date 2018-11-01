@@ -41,7 +41,7 @@ let login = function (req, res) {
 };
 
 // Log out and deauthenticate a user session
-let logout = function(req, res) {
+let logout = function(req, res, next) {
     if (req.session.authenticated) {
         req.session.authenticated = false;
         delete req.session.email;
