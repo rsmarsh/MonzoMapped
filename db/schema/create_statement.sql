@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `MonzoMappedDB`.`MonzoLink` (
   `access_token` VARCHAR(255) NOT NULL,
   `refresh_token` VARCHAR(255) NOT NULL,
   `token_expires` VARCHAR(15) NOT NULL,
+  `account_id` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`link_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC),
   UNIQUE INDEX `link_id_UNIQUE` (`link_id` ASC),
