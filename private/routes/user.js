@@ -15,7 +15,7 @@ let login = function (req, res) {
 
 
     let statement = "SELECT password_hash FROM Users WHERE email = ?";
-    database.query(statement, res.locals.email, function(results){
+    database.query(statement, res.locals.email, function(err, results){
         // Callback will be invoked along with the results from the database
 
         // If no user was found for this email address, inform the user of the failure
@@ -60,7 +60,7 @@ let register = function(req, res){
 
     //first check that this email address does not already exist within the database
     let statement = "SELECT email FROM Users WHERE email = ?";
-    database.query(statement, res.locals.email, function(results){
+    database.query(statement, res.locals.email, function(err, results){
         
         if (results.length > 0) {
             registrationResult(req, res, {
@@ -86,7 +86,7 @@ let createNewUser = function(req, res) {
         let statement = "INSERT INTO users (email, password_hash, created_date) VALUES (?, ?, NOW())";
         let inserts = [res.locals.email, hash];
 
-        database.query(statement, inserts, function(successful){
+        database.query(statement, inserts, function(err, successful){
 
             // A message which will be displayed to the user once the process has completed
             let displayMessage = successful ?  

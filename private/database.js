@@ -25,13 +25,23 @@ let query = function (statement, inserts, callback) {
     let db = connectToDB();
 
     db.query(statement, inserts, function (err, results) {
-        if (err) throw err;
+        if (err) {
+            // All cases which are ready to be handled can be placed within this waterfall switch statement
+            switch(err.code) {
+                case 'ER_DUP_ENTRY':
+                    console.log("error: "+err.code+" handled gracefully");
+                    break;
+                default:
+                    throw err;
+
+            }
+        } 
         
         // Does this need to be within the callback function? What if the query hasn't finished yet?
         closeDBConnection(db);
 
         // pass the results back to the callee
-        callback(results);
+        callback(err, results);
     });
 
 }

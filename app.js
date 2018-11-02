@@ -24,7 +24,7 @@ server.instance.use(session({
 
 // Set up routes on the server
 const routes = require('./private/routes/router')(server.instance);
-const authoriser = require('./private/authoriser');
-const db = require('./private/database');
+// const authoriser = require('./private/monzo-bridge');
+// const db = require('./private/database');
 
 server.start(3001);

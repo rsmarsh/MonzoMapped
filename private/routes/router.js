@@ -1,8 +1,8 @@
 const user = require('./user');
 const db = require('../database');
 
-// doesn't seem like this belongs in this file, but this works with the current setup as routes need to point to it
-const authoriser = require('../authoriser');
+// This module allows communication between the app and monzo's API
+const monzo = require('../monzo-bridge');
 
 let visitorCounter = 0;
 
@@ -77,9 +77,9 @@ module.exports = function(server) {
         
     });
 
-    server.get('/monzo', authoriser.connectMonzo);
+    server.get('/monzo', monzo.connectMonzo);
 
-    server.get('/oauth/redirect', authoriser.getAccessToken);
+    server.get('/oauth/redirect', monzo.getAccessToken);
 
     server.get('/monzo/account', function(req, res){
         res.type('html');
@@ -90,7 +90,7 @@ module.exports = function(server) {
 
     // Test route to run commands on the database and write the response to the page
     server.get('/db', function(req, res){
-        var callback = function(dbData){
+        var callback = function(err, dbData){
             res.type('html');
             res.send(`
             <h1>DB Response:</h1>
