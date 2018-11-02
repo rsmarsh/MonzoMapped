@@ -65,7 +65,7 @@ let receiveAccessToken = function (req, res, token) {
     db.query(insertStatement, inserts, function(err, results){
         if (err) {
             if (err.code === "ER_DUP_ENTRY") {
-                res.send("You have already a Monzo account to this account, only one Monzo account per user is currently supported");
+                res.send("You have already have a linked Monzo account, only one Monzo account per user is currently supported");
                 return;
             }
         }

@@ -25,9 +25,24 @@ module.exports = function(server) {
         // if a user is not logged in, always forward them to the login page
         if ((req.url!=='/login' && req.url!=='/register') && !req.session.authenticated) {
             res.redirect('/login');
-        } else {
-            next();
+            return;
         }
+
+        // Mainly for dev reasons, to keep check on session persistance and get into the swing of logging out before logging in
+        if ( (req.url === '/login' || req.url === '/register') && req.session.authenticated) {
+            res.redirect('monzo');
+            return;
+        }
+
+        // to reach here, user will be authenticated
+        if (req.url === '/map') {
+            if (!req.session.monzo) {
+                res.redirect('/monzo');
+                return;
+            }
+        }
+
+        next();
     });
 
     // only server static files within the public folder or lower
